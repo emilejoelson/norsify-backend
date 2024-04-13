@@ -1,0 +1,67 @@
+version: '3.8'
+services:
+  database:
+    image: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_DB: norsify
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+    networks:
+      - postgres
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user@example.com
+      PGADMIN_DEFAULT_PASSWORD: user
+      PGADMIN_LISTEN_ADDRESS: 0.0.0.0
+      PGADMIN_LISTEN_PORT: 8082
+      PGADMIN_SERVER_MODE: "True"
+      PGADMIN_SERVER_NAME: pgadmin_server
+      PGADMIN_SERVER_HOSTNAME: postgres
+      PGADMIN_SERVER_PORT: 5432
+      PGADMIN_SERVER_USERNAME: postgres
+      PGADMIN_SERVER_PASSWORD: postgres
+    ports:
+      - 8082:8082
+    networks:
+      - postgres
+  
+  # norsify-api:
+  #   build: ./
+  #   container_name: norsify-api
+  #   environment:
+  #     db-url: database
+  #     db-username: postgres
+  #     db-password: postgres
+  #   ports:
+  #     - 8080:8080
+  #   networks:
+  #     - postgres
+  
+  # norsify-front:
+  #   build: ./norsify-front
+  #   container_name: norsify-front
+  #   ports:
+  #     - 4200:4200
+  #   volumes:
+  #     - /app/node_modules
+  #     - ./norsify-api:/app
+  #   environment:
+  #     CHOKIDAR_USEPOLLING: true
+  #   networks:
+  #     - postgres
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  saas-data:
+  pgadmin:
+  
+  
