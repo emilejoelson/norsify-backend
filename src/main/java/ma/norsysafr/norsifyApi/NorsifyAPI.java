@@ -2,15 +2,12 @@ package ma.norsysafr.norsifyApi;
 
 
 import ma.norsysafr.norsifyApi.config.RsakeyConfig;
-import ma.norsysafr.norsifyApi.entities.user.AppRole;
-import ma.norsysafr.norsifyApi.entities.user.AppUser;
 import ma.norsysafr.norsifyApi.service.interfaces.AccountService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -30,15 +27,15 @@ public class NorsifyAPI {
 	@Bean
 	CommandLineRunner start(AccountService accountService){
 		return args -> {
-			accountService.addNewRole(new AppRole(null, "USER"));
-			accountService.addNewRole(new AppRole(null, "ADMIN"));
+			/*accountService.addNewRole(new AppRoleDtoRequest( "USER"));
+			accountService.addNewRole(new AppRoleDtoRequest("ADMIN"));
 
-			accountService.addNewUser(new AppUser(null, "user1", "1234", new ArrayList<>()));
-			accountService.addNewUser(new AppUser(null, "admin", "1234", new ArrayList<>()));
+			accountService.addNewUser(new AppUserDtoRequest( "user1", "1234"));
+			accountService.addNewUser(new AppUserDtoRequest( "admin", "1234"));
 
 			accountService.addRoleToUser("user1", "USER");
 			accountService.addRoleToUser("admin", "USER");
-			accountService.addRoleToUser("admin", "ADMIN");
+			accountService.addRoleToUser("admin", "ADMIN");*/
 		};
 	}
 

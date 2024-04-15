@@ -1,6 +1,10 @@
 package ma.norsysafr.norsifyApi.controller;
 
 import lombok.Data;
+import ma.norsysafr.norsifyApi.dto.request.AppRoleDtoRequest;
+import ma.norsysafr.norsifyApi.dto.request.AppUserDtoRequest;
+import ma.norsysafr.norsifyApi.dto.response.AppRoleDtoResponse;
+import ma.norsysafr.norsifyApi.dto.response.AppUserDtoResponse;
 import ma.norsysafr.norsifyApi.entities.user.AppRole;
 import ma.norsysafr.norsifyApi.entities.user.AppUser;
 import ma.norsysafr.norsifyApi.service.implementation.AccountServiceImpl;
@@ -12,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -23,30 +29,33 @@ public class AccountRestController {
     }
 
     @GetMapping(path = "/users")
-    public ResponseEntity<List<AppUser>> listUsers() {
-        List<AppUser> allUsers = accountService.listUsers();
+    public ResponseEntity<List<AppUserDtoResponse>> listUsers() {
+        List<AppUserDtoResponse> allUsers = accountService.listUsers();
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 
 
     @PostMapping(path = "/users")
-    public ResponseEntity<AppUser> addNewUser(@RequestBody AppUser appUser) {
-        AppUser appuser = accountService.addNewUser(appUser);
-        return new ResponseEntity<>(appuser, HttpStatus.OK);
+    public ResponseEntity<AppUserDtoResponse> addNewUser(@Valid @RequestBody AppUserDtoRequest appUserDto) {
+        AppUserDtoResponse response = accountService.addNewUser(appUserDto);
+        return ResponseEntity.created(URI.create("/users/"+response.id()))
+                .body(response);
     }
+
 
     @PostMapping(path = "/roles")
     @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
-    public ResponseEntity<AppRole> addNewRole(@RequestBody AppRole appRole) {
-        AppRole approle = accountService.addNewRole(appRole);
-        return new ResponseEntity<>(approle, HttpStatus.OK);
+    public ResponseEntity<AppRoleDtoResponse> addNewRole(@Valid @RequestBody AppRoleDtoRequest appRoleDto) {
+        AppRoleDtoResponse response = accountService.addNewRole(appRoleDto);
+        return  ResponseEntity.created(URI.create("/roles/"+response.id()))
+                .body(response);
     }
 
     @GetMapping(path = "/roles")
     @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
-    public ResponseEntity<List<AppRole>> listRoles() {
-        List<AppRole> allRoles = accountService.listRoles();
-        return new ResponseEntity<>(allRoles, HttpStatus.OK);
+    public ResponseEntity<List<AppRoleDtoResponse>> listRoles() {
+        List<AppRoleDtoResponse> responses = accountService.listRoles();
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
     @PostMapping(path = "/addRoleToUser")
